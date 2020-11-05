@@ -103,7 +103,17 @@ def Tseitin(A, letrasProposicionalesA):
 def Clausula(C):
 
     #  IMPLEMENTAR AQUI ALGORITMO CLAUSULA
-    pass
+    L = []
+    while len(C) > 0:
+        S = C[0]
+        if S == "-":
+            L.append(S + C[1])
+            C = C[3:]
+        else:
+            L.append(S)
+            C = C[2:]
+    return L
+
 
 # Algoritmo para obtencion de forma clausal
 # Input: A (cadena) en notacion inorder en FNC
