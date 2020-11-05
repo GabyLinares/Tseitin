@@ -47,11 +47,54 @@ def enFNC(A):
 # Input: A (cadena) en notacion inorder
 # Output: B (cadena), Tseitin
 def Tseitin(A, letrasProposicionalesA):
+    #  IMPLEMENTAR AQUI ALGORITMO TSEITIN
+    #letrasProposicionalesB = [chr(x) for x in range(97, 110)]
     letrasProposicionalesB = [chr(x) for x in range(256, 1200)]
     assert(not bool(set(letrasProposicionalesA) & set(letrasProposicionalesB))), u"¡Hay letras proposicionales en común!"
-
-    #  IMPLEMENTAR AQUI ALGORITMO TSEITIN
-    pass
+    L = [] # Inicializamos lista de conjunciones
+    Pila = [] # Inicializamos pila
+    I = -1 # Inicializamos contador de variables nuevas
+    S = A[0] # Inicializamos sımbolo de trabajo
+    
+    while len(A) > 0:
+        if (0 < len(S) < 2) and len(Pila) > 0 and Pila[-1] == "-":
+            I += 1
+            atomo = letrasProposicionalesB[I]
+            Pila = Pila[:-1]
+            Pila.append(atomo)
+            L.append(atomo + "<>" + "-" + S)
+            A = A[1:]
+            if len(A) > 0:
+                S = A[0]
+        elif S == ")":
+            w = Pila[-1]
+            u = Pila[-2]
+            v = Pila[-3]
+            Pila = Pila[:len(Pila)-4]
+            I += 1
+            atomo = letrasProposicionalesB[I]
+            L.append(atomo + "<>" + "(" + v + u + w +")")
+            S = atomo
+        else:
+            Pila.append(S)
+            A = A[1:]
+            if len(A) > 0:
+                S = A[0]
+                
+    B = ""
+    
+    if I < 0:
+        atomo = Pila[-1]
+        
+    else:
+        atomo = letrasProposicionalesB[I]
+        
+    for x in L:
+       y = enFNC(x)
+       B = B + "Y" + y
+    
+    B = atomo + B
+    return B
 
 # Subrutina Clausula para obtener lista de literales
 # Input: C (cadena) una clausula
